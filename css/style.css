@@ -1,0 +1,141 @@
+:root {
+  --lilla-chiaro: #f3e5f5;
+  --lilla: #d1c4e9;
+  --lilla-scuro: #9575cd;
+  --rosa: #f48fb1;
+  --accent: #ce93d8;
+  --testo: #4a148c;
+  --bianco: #fff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Fredoka', sans-serif;
+  background-color: var(--lilla-chiaro);
+  color: var(--testo);
+}
+
+header {
+  background-color: var(--lilla);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.logo {
+  height: 70px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--testo);
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: var(--rosa);
+}
+
+.hero {
+  text-align: center;
+  background: linear-gradient(to bottom, var(--lilla), var(--rosa));
+  color: var(--bianco);
+  padding: 60px 20px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+.hero h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 1.2em;
+}
+
+.cta-button {
+  background-color: var(--accent);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 20px;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+  background-color: var(--rosa);
+}
+
+.servizi {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.card {
+  background-color: var(--bianco);
+  padding: 25px;
+  width: 240px;
+  border-radius: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  font-size: 1.4em;
+}
+
+.funziona {
+  background-color: var(--lilla);
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--testo);
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  margin-top: 50px;
+}
+
+.funziona ol {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.funziona li::before {
+  content: "💅 ";
+}
+
+footer {
+  background-color: var(--rosa);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-top: 5px solid var(--accent);
+}
