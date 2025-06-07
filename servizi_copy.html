@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Servizi - The Super Long Nail</title>
+
+    <!-- Google Fonts - Fredoka -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- SwiperJS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <img src="img/logo.png" alt="Logo" class="logo" />
+    <nav>
+      <ul>
+        <li><a href="index.html">🏠 Home</a></li>
+        <li><a href="servizi.html" class="active">💅 Servizi</a></li>
+        <li><a href="prenota.html">📅 Prenota</a></li>
+        <li><a href="registrati.html">📝 Registrati</a></li>
+        <li><a href="login.html">🔐 Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Thumbnail Navigation -->
+  <section class="thumbnail-nav">
+    <h2>🌸 Scopri i nostri servizi 🌸</h2>
+    <div class="thumbs">
+      <img src="img/servizi/manicure_thumb.jpg" alt="Manicure" onclick="swiper.slideTo(0)" />
+      <img src="img/servizi/viso_thumb.jpg" alt="Pulizia Viso" onclick="swiper.slideTo(1)" />
+      <img src="img/servizi/massaggio_thumb.jpg" alt="Massaggio" onclick="swiper.slideTo(2)" />
+    </div>
+  </section>
+
+  <!-- Portfolio Carousel -->
+  <section class="portfolio">
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide">
+          <img src="img/servizi/manicure.jpg" alt="Manicure" />
+          <div class="desc">
+            <h3>💅 Manicure</h3>
+            <p>Trattamenti di bellezza per unghie impeccabili: gel, semipermanente, nail art personalizzata.</p>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="swiper-slide">
+          <img src="img/servizi/viso.jpg" alt="Pulizia Viso" />
+          <div class="desc">
+            <h3>🌸 Pulizia del Viso</h3>
+            <p>Trattamento completo con esfoliazione, maschera e massaggio per una pelle radiosa.</p>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="swiper-slide">
+          <img src="img/servizi/massaggio.jpg" alt="Massaggio Relax" />
+          <div class="desc">
+            <h3>💆 Massaggio Relax</h3>
+            <p>Rilassa corpo e mente con oli profumati e mani esperte in ambienti rilassanti.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Navigation -->
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+
+    <!-- Pausa / Riprendi -->
+    <div class="controls">
+      <button onclick="toggleAutoplay()">⏸️ Pausa / ▶️ Riprendi</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>🌷 The Super Long Nail - Solo per veri momenti di relax</p>
+  </footer>
+
+  <!-- Swiper Init -->
+  <script>
+    const swiper = new Swiper('.mySwiper', {
+      loop: true,
+      autoplay: {
+        delay: 4000,
+        disableOnInteraction: false,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+
+    function toggleAutoplay() {
+      if (swiper.autoplay.running) {
+        swiper.autoplay.stop();
+      } else {
+        swiper.autoplay.start();
+      }
+    }
+  </script>
+
+</body>
+</html>
