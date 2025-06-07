@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Servizi - The Super Long Nail</title>
+      <!-- Google Fonts - Fredoka -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --lilla-chiaro: #f3e5f5;
+      --lilla: #d1c4e9;
+      --lilla-scuro: #9575cd;
+      --rosa: #f48fb1;
+      --accent: #ce93d8;
+      --testo: #4a148c;
+      --bianco: #fff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background-color: var(--lilla-chiaro);
+      color: var(--testo);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: linear-gradient(to bottom, var(--lilla), var(--rosa));
+      color: var(--bianco);
+      padding: 60px 20px;
+      text-align: center;
+      border-bottom-left-radius: 50px;
+      border-bottom-right-radius: 50px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="sparkles" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="5" cy="5" r="1" fill="rgba(255,255,255,0.3)"/><circle cx="15" cy="15" r="0.5" fill="rgba(255,255,255,0.5)"/></pattern></defs><rect width="100" height="100" fill="url(%23sparkles)"/></svg>') repeat;
+      opacity: 0.3;
+      animation: sparkle 3s ease-in-out infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.6; }
+    }
+
+    .header h1 {
+      color: var(--bianco);
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .header p {
+      color: var(--bianco);
+      font-size: 1.2em;
+      position: relative;
+      z-index: 2;
+    }
+
+    .servizi-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .main-title {
+      text-align: center;
+      font-size: 2.5em;
+      color: var(--testo);
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .main-title::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(45deg, var(--accent), var(--rosa));
+      margin: 20px auto;
+      border-radius: 2px;
+    }
+
+    /* Thumbnails Navigation */
+    .thumbnails-nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .thumbnail {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 4px solid #ff6b9d;
+      position: relative;
+      background: linear-gradient(45deg, #e91e63, #ff6b9d);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .thumbnail:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
+      border-color: #e91e63;
+    }
+
+    .thumbnail.active {
+      border-color: #ad1457;
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(233, 30, 99, 0.5);
+    }
+
+    .thumbnail-label {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--testo);
+      white-space: nowrap;
+    }
+
+    /* Gallery Section */
+    .gallery-container {
+      background-color: var(--bianco);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(206, 147, 216, 0.05) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(120deg); }
+      66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+
+    .gallery-slide {
+      display: none;
+      animation: fadeIn 0.8s ease-in-out;
+      position: relative;
+      z-index: 2;
+    }
+
+    .gallery-slide.active {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .service-image {
+      flex: 1;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .service-image img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .service-image:hover img {
+      transform: translateY(-5px);
+    }
+
+    .service-details {
+      flex: 1;
+      padding-left: 30px;
+    }
+
+    .service-title {
+      font-size: 2.2em;
+      color: var(--testo);
+      margin-bottom: 20px;
+    }
+
+    .service-description {
+      font-size: 1.1em;
+      line-height: 1.8;
+      color: var(--testo);
+      margin-bottom: 30px;
+    }
+
+    .service-features {
+      list-style: none;
+      margin-bottom: 30px;
+    }
+
+    .service-features li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--lilla);
+      font-size: 1em;
+      color: var(--testo);
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .service-features li::before {
+      content: '💅';
+      position: absolute;
+      left: 0;
+      color: var(--rosa);
+    }
+
+    .price-tag {
+      background: linear-gradient(45deg, var(--accent), var(--rosa));
+      color: var(--bianco);
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-size: 1.2em;
+      font-weight: 600;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+
+    .price-tag:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    /* Gallery Controls */
+    .gallery-controls {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 40px;
+    }
+
+    .control-btn {
+      background: linear-gradient(45deg, var(--accent), var(--rosa));
+      border: none;
+      color: var(--bianco);
+      padding: 12px 25px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .control-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      background: linear-gradient(45deg, var(--rosa), var(--accent));
+    }
+
+    .auto-play-indicator {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--testo);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--lilla);
+      border-radius: 2px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(45deg, var(--accent), var(--rosa));
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    .footer {
+      background-color: var(--rosa);
+      color: var(--bianco);
+      text-align: center;
+      padding: 20px;
+      border-top: 5px solid var(--accent);
+      margin-top: 50px;
+    }
+
+    .footer p {
+      font-size: 1.1em;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .gallery-slide.active {
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .service-details {
+        padding-left: 0;
+      }
+
+      .thumbnails-nav {
+        gap: 15px;
+      }
+
+      .thumbnail {
+        width: 80px;
+        height: 80px;
+        font-size: 1.8rem;
+      }
+
+      .main-title {
+        font-size: 2em;
+      }
+
+      .service-title {
+        font-size: 1.8em;
+      }
+
+      .gallery-container {
+        padding: 25px 20px;
+      }
+
+      .servizi-container {
+        padding: 30px 15px;
+      }
+
+      .header {
+        padding: 40px 15px;
+      }
+
+      .header h1 {
+        font-size: 2em;
+      }
+
+      .header p {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <img src="img/logo.png" alt="Logo" class="logo" />
+    <nav>
+      <ul>
+        <li><a href="index.html">🏠 Home</a></li>
+        <li><a href="servizi_claude.html" class="active">💅 Servizi</a></li>
+        <li><a href="prenota.html">📅 Prenota</a></li>
+        <li><a href="registrati.html">📝 Registrati</a></li>
+        <li><a href="login.html">🔐 Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="servizi-container">
+    <h2 class="main-title">🌟 I nostri Servizi 🌟</h2>
+    
+    <!-- Thumbnails Navigation -->
+    <div class="thumbnails-nav">
+      <div class="thumbnail active" data-service="0">
+        💅
+        <div class="thumbnail-label">Manicure</div>
+      </div>
+      <div class="thumbnail" data-service="1">
+        🌸
+        <div class="thumbnail-label">Pulizia Viso</div>
+      </div>
+      <div class="thumbnail" data-service="2">
+        💆
+        <div class="thumbnail-label">Massaggi</div>
+      </div>
+      <div class="thumbnail" data-service="3">
+        👁️
+        <div class="thumbnail-label">Ciglia</div>
+      </div>
+      <div class="thumbnail" data-service="4">
+        🦵
+        <div class="thumbnail-label">Epilazione</div>
+      </div>
+      <div class="thumbnail" data-service="5">
+        ✨
+        <div class="thumbnail-label">Trattamenti</div>
+      </div>
+    </div>
+
+    <!-- Gallery Container -->
+    <div class="gallery-container">
+      <!-- Slide 1: Manicure -->
+      <div class="gallery-slide active">
+        <div class="service-image">
+          <img src="img/servizi/manicure.jpg" alt="Manicure" />
+        </div>
+        <div class="service-details">
+          <h3 class="service-title">💅 Manicure Professionale</h3>
+          <p class="service-description">
+            Trasforma le tue unghie in opere d'arte! I nostri trattamenti manicure includono cura delle cuticole, 
+            limatura perfetta e applicazione di smalti di alta qualità. Scegli tra gel, semipermanente o nail art personalizzata.
+          </p>
+          <ul class="service-features">
+            <li>Manicure classica con smalto tradizionale</li>
+            <li>Gel e semipermanente lunga durata</li>
+            <li>Nail art personalizzata e decorazioni</li>
+            <li>Trattamenti rinforzanti e nutrienti</li>
+            <li>Rimozione delicata senza danni</li>
+          </ul>
+          <div class="price-tag">Da €25 a €50</div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Pulizia Viso -->
+      <div class="gallery-slide">
+        <div class="service-image">
+          <img src="img/servizi/viso.jpg" alt="Pulizia Viso" />
+        </div>
+        <div class="service-details">
+          <h3 class="service-title">🌸 Pulizia Viso Profonda</h3>
+          <p class="service-description">
+            Regala alla tua pelle una nuova vita con i nostri trattamenti viso personalizzati. 
+            Utilizziamo solo prodotti naturali e tecniche professionali per una pelle luminosa e rigenerata.
+          </p>
+          <ul class="service-features">
+            <li>Analisi della pelle personalizzata</li>
+            <li>Pulizia profonda con vapore</li>
+            <li>Estrazione punti neri delicata</li>
+            <li>Maschera purificante e idratante</li>
+            <li>Massaggio rilassante del viso</li>
+          </ul>
+          <div class="price-tag">Da €35 a €65</div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Massaggi -->
+      <div class="gallery-slide">
+        <div class="service-image">
+          <img src="img/servizi/massaggio.jpg" alt="Massaggio Relax" />
+        </div>
+        <div class="service-details">
+          <h3 class="service-title">💆 Massaggi Rilassanti</h3>
+          <p class="service-description">
+            Lasciati coccolare dai nostri massaggi terapeutici con oli essenziali selezionati. 
+            Perfetti per sciogliere le tensioni e rigenerare corpo e mente dopo una giornata intensa.
+          </p>
+          <ul class="service-features">
+            <li>Massaggio rilassante total body</li>
+            <li>Massaggio decontratturante</li>
+            <li>Massaggio con pietre calde</li>
+            <li>Aromaterapia con oli essenziali</li>
+            <li>Massaggio del cuoio capelluto</li>
+          </ul>
+          <div class="price-tag">Da €40 a €80</div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Ciglia -->
+      <div class="gallery-slide">
+        <div class="service-image">
+          <img src="https://via.placeholder.com/500x400/ff69b4/ffffff?text=Extension+Ciglia+👁️" alt="Extension Ciglia" />
+        </div>
+        <div class="service-details">
+          <h3 class="service-title">👁️ Extension Ciglia</h3>
+          <p class="service-description">
+            Sguardo magnetico e irresistibile con le nostre extension ciglia professionali. 
+            Ciglia lunghe, folte e naturali che valorizzano la tua bellezza senza bisogno di mascara.
+          </p>
+          <ul class="service-features">
+            <li>Extension ciglia one-to-one</li>
+            <li>Volume russo 2D-6D</li>
+            <li>Ciglia colorate e glitter</li>
+            <li>Laminazione e lifting ciglia</li>
+            <li>Ritocchi e manutenzione</li>
+          </ul>
+          <div class="price-tag">Da €55 a €120</div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Epilazione -->
+      <div class="gallery-slide">
+        <div class="service-image">
+          <img src="https://via.placeholder.com/500x400/da70d6/ffffff?text=Epilazione+🦵" alt="Epilazione" />
+        </div>
+        <div class="service-details">
+          <h3 class="service-title">🦵 Epilazione Professionale</h3>
+          <p class="service-description">
+            Pelle liscia e setosa con i nostri trattamenti di epilazione delicati ed efficaci. 
+            Utilizziamo cere di alta qualità e tecniche professionali per risultati duraturi.
+          </p>
+          <ul class="service-features">
+            <li>Epilazione con cera a caldo</li>
+            <li>Epilazione brasiliana completa</li>
+            <li>Epilazione sopracciglia e viso</li>
+            <li>Epilazione gambe e braccia</li>
+            <li>Trattamenti lenitivi post-epilazione</li>
+          </ul>
+          <div class="price-tag">Da €15 a €60</div>
+        </div>
+      </div>
+
+      <!-- Slide 6: Trattamenti Speciali -->
+      <div class="gallery-slide">
+        <div class="service-image">
+          <img src="https://via.placeholder.com/500x400/ba55d3/ffffff?text=Trattamenti+Speciali+✨" alt="Trattamenti Speciali" />
+        </div>
+        <div class="service-details">
+          <h3 class="service-title">✨ Trattamenti Speciali</h3>
+          <p class="service-description">
+            Scopri i nostri trattamenti esclusivi per momenti di puro benessere. 
+            Pacchetti personalizzati che combinano più servizi per un'esperienza di bellezza completa.
+          </p>
+          <ul class="service-features">
+            <li>Pacchetto sposa completo</li>
+            <li>Trattamenti anti-age avanzati</li>
+            <li>Rituali di bellezza stagionali</li>
+            <li>Percorsi benessere personalizzati</li>
+            <li>Consulenza immagine e stile</li>
+          </ul>
+          <div class="price-tag">Da €80 a €200</div>
+        </div>
+      </div>
+
+      <!-- Gallery Controls -->
+      <div class="gallery-controls">
+        <button class="control-btn" id="prevBtn">❮ Precedente</button>
+        <button class="control-btn" id="playPauseBtn">⏸️ Pausa</button>
+        <button class="control-btn" id="nextBtn">Successivo ❯</button>
+      </div>
+
+      <div class="auto-play-indicator">
+        <div>Scorrimento automatico attivo</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>🌷 The Super Long Nail - Solo per veri momenti di relax</p>
+  </footer>
+
+  <script>
+    class ServiceGallery {
+      constructor() {
+        this.currentSlide = 0;
+        this.totalSlides = 6;
+        this.isPlaying = true;
+        this.slideInterval = null;
+        this.progressInterval = null;
+        this.slideDuration = 5000; // 5 seconds
+        this.progressWidth = 0;
+        
+        this.slides = document.querySelectorAll('.gallery-slide');
+        this.thumbnails = document.querySelectorAll('.thumbnail');
+        this.prevBtn = document.getElementById('prevBtn');
+        this.nextBtn = document.getElementById('nextBtn');
+        this.playPauseBtn = document.getElementById('playPauseBtn');
+        this.progressFill = document.getElementById('progressFill');
+        
+        this.init();
+      }
+      
+      init() {
+        this.bindEvents();
+        this.startAutoPlay();
+      }
+      
+      bindEvents() {
+        // Navigation buttons
+        this.prevBtn.addEventListener('click', () => this.prevSlide());
+        this.nextBtn.addEventListener('click', () => this.nextSlide());
+        this.playPauseBtn.addEventListener('click', () => this.toggleAutoPlay());
+        
+        // Thumbnail navigation
+        this.thumbnails.forEach((thumb, index) => {
+          thumb.addEventListener('click', () => this.goToSlide(index));
+        });
+        
+        // Pause on hover
+        const galleryContainer = document.querySelector('.gallery-container');
+        galleryContainer.addEventListener('mouseenter', () => this.pauseAutoPlay());
+        galleryContainer.addEventListener('mouseleave', () => this.resumeAutoPlay());
+      }
+      
+      showSlide(index) {
+        // Hide all slides
+        this.slides.forEach(slide => slide.classList.remove('active'));
+        this.thumbnails.forEach(thumb => thumb.classList.remove('active'));
+        
+        // Show current slide
+        this.slides[index].classList.add('active');
+        this.thumbnails[index].classList.add('active');
+        
+        this.currentSlide = index;
+        this.resetProgress();
+      }
+      
+      nextSlide() {
+        const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+        this.showSlide(nextIndex);
+      }
+      
+      prevSlide() {
+        const prevIndex = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+        this.showSlide(prevIndex);
+      }
+      
+      goToSlide(index) {
+        this.showSlide(index);
+      }
+      
+      startAutoPlay() {
+        if (this.isPlaying) {
+          this.slideInterval = setInterval(() => this.nextSlide(), this.slideDuration);
+          this.startProgress();
+        }
+      }
+      
+      stopAutoPlay() {
+        if (this.slideInterval) {
+          clearInterval(this.slideInterval);
+          this.slideInterval = null;
+        }
+        this.stopProgress();
+      }
+      
+      toggleAutoPlay() {
+        this.isPlaying = !this.isPlaying;
+        
+        if (this.isPlaying) {
+          this.playPauseBtn.textContent = '⏸️ Pausa';
+          this.startAutoPlay();
+        } else {
+          this.playPauseBtn.textContent = '▶️ Play';
+          this.stopAutoPlay();
+        }
+      }
+      
+      pauseAutoPlay() {
+        if (this.isPlaying) {
+          this.stopAutoPlay();
+        }
+      }
+      
+      resumeAutoPlay() {
+        if (this.isPlaying) {
+          this.startAutoPlay();
+        }
+      }
+      
+      startProgress() {
+        this.progressWidth = 0;
+        this.progressInterval = setInterval(() => {
+          this.progressWidth += (100 / (this.slideDuration / 100));
+          if (this.progressWidth >= 100) {
+            this.progressWidth = 0;
+          }
+          this.progressFill.style.width = this.progressWidth + '%';
+        }, 100);
+      }
+      
+      stopProgress() {
+        if (this.progressInterval) {
+          clearInterval(this.progressInterval);
+          this.progressInterval = null;
+        }
+      }
+      
+      resetProgress() {
+        this.progressWidth = 0;
+        this.progressFill.style.width = '0%';
+        if (this.isPlaying) {
+          this.stopProgress();
+          this.startProgress();
+        }
+      }
+    }
+    
+    // Initialize the gallery when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      new ServiceGallery();
+    });
+  </script>
+</body>
+</html>
