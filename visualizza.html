@@ -57,7 +57,7 @@
                 <li><a href="index.html">🏠 Home</a></li>
                 <li><a href="servizi_claude.html">💅 Servizi</a></li>
                 <li><a href="prenota.html">📅 Prenota</a></li>
-                <li><a href="visualizza.html" class="active">Cerca Appuntamento</a></li>
+                <li><a href="visualizza.html" class="active">📝 Appuntamenti</a></li>
             </ul>
         </nav>
     </header>
@@ -65,16 +65,12 @@
     <div class="container">
         <h1>🔍 Cerca la tua Prenotazione</h1>
         <p style="color: var(--testo); margin-top: -1rem; margin-bottom: 2rem;">
-            Inserisci l'ID e il codice segreto che hai ricevuto al momento della conferma.
+            Inserisci il codice di prenotazione che hai ricevuto al momento della conferma.
         </p>
         <form id="searchForm">
             <div class="form-group">
-                <label for="appointmentId">ID Prenotazione</label>
-                <input type="number" id="appointmentId" required placeholder="Es. 123">
-            </div>
-            <div class="form-group">
-                <label for="uniqueCode">Codice Segreto</label>
-                <input type="text" id="uniqueCode" required placeholder="Es. a1b2c3d4">
+                <label for="uniqueCode">Codice Prenotazione</label>
+                <input type="text" id="uniqueCode" required placeholder="Es. a1b2c3">
             </div>
             <button type="submit" class="btn">Cerca</button>
         </form>

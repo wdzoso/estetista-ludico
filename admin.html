@@ -66,17 +66,6 @@
       color: white;
       border-color: #a66cb7;
     }
-    .repeat-options {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-    .repeat-option {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
     button {
       padding: 0.7rem 1.5rem;
       background-color: #c89bd3;
@@ -96,8 +85,11 @@
       padding: 0.3rem 0.8rem;
       font-size: 12px;
     }
-    .delete-btn:hover {
-      background-color: #e06060;
+    .delete-btn-booked {
+      background-color: #dc3545;
+    }
+    .delete-btn:hover, .delete-btn-booked:hover {
+      opacity: 0.8;
     }
     #slotList {
       list-style: none;
@@ -112,15 +104,30 @@
       justify-content: space-between;
       align-items: center;
       border-radius: 6px;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     .slot-item.booked {
-      background-color: #fff3cd;
-      border-color: #ffeaa7;
+      background-color: #fff8e1;
+      border-color: #ffecb3;
     }
     .slot-info {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+        flex-grow: 1;
+    }
+    .details-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 14px;
+        flex-wrap: wrap;
+    }
+    .service-info {
+        font-style: italic;
+        color: #555;
     }
     .status-badge {
       padding: 0.2rem 0.5rem;
@@ -133,68 +140,46 @@
       color: #155724;
     }
     .status-booked {
-      background: #fff3cd;
-      color: #856404;
-    }
-    .loading {
-      opacity: 0.6;
-      pointer-events: none;
+      background: #ffe082;
+      color: #6d4c41;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <h1>👩‍💼 Gestione Orari Disponibili</h1>
-
   <div class="section">
     <h2>➕ Aggiungi Nuovi Slot</h2>
-    
     <form id="slotForm">
       <div class="form-group">
         <label for="startDate">Data di inizio:</label>
         <input type="date" id="startDate" name="startDate" required>
       </div>
-
       <div class="form-group">
-        <label for="endDate">Data di fine (opzionale, per slot ricorrenti):</label>
+        <label for="endDate">Data di fine (opzionale):</label>
         <input type="date" id="endDate" name="endDate">
       </div>
-
       <div class="form-group">
         <label>Seleziona orari:</label>
-        <div class="time-grid" id="timeGrid">
-          <!-- Gli orari verranno generati con JavaScript -->
-        </div>
+        <div class="time-grid" id="timeGrid"></div>
       </div>
-
       <div class="form-group">
         <label>Ripetizione:</label>
         <div class="repeat-options">
-          <div class="repeat-option">
-            <input type="radio" id="noRepeat" name="repeat" value="none" checked>
-            <label for="noRepeat">Solo date selezionate</label>
-          </div>
-          <div class="repeat-option">
-            <input type="radio" id="weekly" name="repeat" value="weekly">
-            <label for="weekly">Ogni settimana</label>
-          </div>
-          <div class="repeat-option">
-            <input type="radio" id="biweekly" name="repeat" value="biweekly">
-            <label for="biweekly">Ogni 2 settimane</label>
-          </div>
+          <input type="radio" id="noRepeat" name="repeat" value="none" checked> <label for="noRepeat">Solo date selezionate</label>
+          <input type="radio" id="weekly" name="repeat" value="weekly"> <label for="weekly">Ogni settimana</label>
+          <input type="radio" id="biweekly" name="repeat" value="biweekly"> <label for="biweekly">Ogni 2 settimane</label>
         </div>
       </div>
-
       <button type="submit">➕ Crea Slot</button>
       <button type="button" onclick="clearSelection()">🗑️ Cancella Selezione</button>
     </form>
   </div>
-
   <div class="section">
     <h2>📅 Orari Gestiti</h2>
     <button onclick="loadSlots()">🔄 Aggiorna Lista</button>
     <ul id="slotList"></ul>
   </div>
-
   <script src="js/admin.js"></script>
 </body>
 </html>

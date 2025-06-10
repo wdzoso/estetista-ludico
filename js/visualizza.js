@@ -7,19 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         resultContainer.innerHTML = '<p>Ricerca in corso...</p>';
 
-        const id = document.getElementById('appointmentId').value;
         const code = document.getElementById('uniqueCode').value;
 
-        if (!id || !code) {
-            showAlert('Per favore, inserisci sia l\'ID che il codice.');
+        if (!code) {
+            showAlert('Per favore, inserisci un codice di prenotazione valido.');
             return;
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/appointment/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/appointment/search`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ unique_code: code })
+                body: JSON.stringify({ access_code: code })
             });
 
             const data = await response.json();

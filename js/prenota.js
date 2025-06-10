@@ -241,6 +241,10 @@ class BookingSystem {
       // Se la prenotazione va a buon fine, mostra la schermata di successo
       this.goToStep(5);
 
+      const responseData = await response.json();
+      if (responseData.access_code) {
+        document.getElementById('access_code').textContent = responseData.access_code;
+      }
     } catch (error) {
       this.showAlert(`Errore di prenotazione: ${error.message}. Questo orario potrebbe essere stato appena prenotato.`, 'error');
       // Riporta l'utente al passo 2 per scegliere un altro orario
