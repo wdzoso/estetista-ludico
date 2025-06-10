@@ -4,18 +4,576 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Prenota - The Super Long Nail</title>
+  <!-- Google Fonts - Fredoka -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --lilla-chiaro: #f3e5f5;
+      --lilla: #d1c4e9;
+      --lilla-scuro: #9575cd;
+      --rosa: #f48fb1;
+      --accent: #ce93d8;
+      --testo: #4a148c;
+      --bianco: #fff;
+      --successo: #4caf50;
+      --errore: #f44336;
+    }
+
+    /* --- CORREZIONE AGGIUNTA QUI --- */
+    /* Questa regola assicura che padding e border siano inclusi nella larghezza totale degli elementi. */
+    * {
+        box-sizing: border-box;
+    }
+    /* --- FINE CORREZIONE --- */
+
+    body {
+        font-family: 'Fredoka', sans-serif;
+    }
+
+    .prenotazione-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 3rem;
+      gap: 2rem;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      border-radius: 25px;
+      background: var(--lilla);
+      color: var(--testo);
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .step.active {
+      background: linear-gradient(45deg, var(--accent), var(--rosa));
+      color: var(--bianco);
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .step.completed {
+      background: var(--successo);
+      color: var(--bianco);
+    }
+
+    .form-section {
+      background: var(--bianco);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .form-section.hidden {
+      display: none;
+    }
+
+    .form-section h2 {
+      color: var(--testo);
+      margin-bottom: 1.5rem;
+      font-size: 1.8em;
+      text-align: center;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .service-card {
+      background: var(--bianco);
+      border: 3px solid var(--lilla);
+      border-radius: 15px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
+    }
+
+    .service-card:hover::before {
+      left: 100%;
+    }
+
+    .service-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .service-card.selected {
+      border-color: var(--rosa);
+      background: linear-gradient(135deg, var(--lilla-chiaro), var(--bianco));
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .service-emoji {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .service-name {
+      font-size: 1.3em;
+      font-weight: 600;
+      color: var(--testo);
+      margin-bottom: 0.5rem;
+    }
+
+    .service-price {
+      color: var(--rosa);
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--testo);
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--lilla);
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: 'Fredoka', sans-serif;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(206, 147, 216, 0.2);
+    }
+
+    .calendar-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .date-card {
+      background: var(--lilla-chiaro);
+      border: 2px solid var(--lilla);
+      border-radius: 15px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .date-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .date-card.selected {
+      background: linear-gradient(135deg, var(--accent), var(--rosa));
+      color: var(--bianco);
+      border-color: var(--rosa);
+    }
+
+    .date-card.no-slots {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f0f0f0;
+    }
+
+    .date-day {
+      font-size: 1.2em;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .date-info {
+      font-size: 0.9em;
+    }
+
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .time-slot {
+      background: var(--lilla-chiaro);
+      border: 2px solid var(--lilla);
+      border-radius: 10px;
+      padding: 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .time-slot:hover {
+      border-color: var(--accent);
+      background: var(--lilla);
+    }
+
+    .time-slot.selected {
+      background: linear-gradient(135deg, var(--accent), var(--rosa));
+      color: var(--bianco);
+      border-color: var(--rosa);
+    }
+
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.1em;
+      font-weight: 600;
+      font-family: 'Fredoka', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, var(--accent), var(--rosa));
+      color: var(--bianco);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .btn-secondary {
+      background: var(--lilla);
+      color: var(--testo);
+    }
+
+    .btn-secondary:hover {
+      background: var(--lilla-scuro);
+      color: var(--bianco);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .summary-card {
+      background: linear-gradient(135deg, var(--lilla-chiaro), var(--bianco));
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--lilla);
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+      font-size: 1.2em;
+      font-weight: 600;
+      color: var(--rosa);
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      margin: -15px 0 0 -15px;
+      border: 3px solid var(--lilla);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .prenotazione-container {
+        padding: 1rem;
+      }
+
+      .step-indicator {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .calendar-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .time-slots {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .navigation-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
 
-  <section class="hero">
-    <h1>📅 Prenota il tuo Appuntamento</h1>
-    <p>Funzionalità in arrivo! Torna presto 💖</p>
-  </section>
+<!-- Header -->
+<header>
+  <img src="img/logo.png" alt="Logo" class="logo" />
+  <nav>
+    <ul>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="servizi_claude.html">💅 Servizi</a></li>
+      <li><a href="prenota.html" class="active">📅 Prenota</a></li>
+      <li><a href="registrati.html">📝 Registrati</a></li>
+      <li><a href="login.html">🔐 Login</a></li>
+    </ul>
+  </nav>
+</header>
 
-  <footer>
-    <p>🌷 The Super Long Nail - Prenota con un click</p>
-  </footer>
+<section class="hero">
+  <h1>📅 Prenota il tuo Appuntamento</h1>
+  <p>Scegli il servizio perfetto per te e prenota in pochi click! 💖</p>
+</section>
+
+<div class="prenotazione-container">
+  <!-- Step Indicator -->
+  <div class="step-indicator">
+    <div class="step active" id="step1-indicator">
+      <span>1</span>
+      <span>Servizio</span>
+    </div>
+    <div class="step" id="step2-indicator">
+      <span>2</span>
+      <span>Data & Ora</span>
+    </div>
+    <div class="step" id="step3-indicator">
+      <span>3</span>
+      <span>Dati</span>
+    </div>
+    <div class="step" id="step4-indicator">
+      <span>4</span>
+      <span>Conferma</span>
+    </div>
+  </div>
+
+  <!-- Alert per messaggi -->
+  <div id="alertContainer"></div>
+
+  <!-- Step 1: Selezione Servizio -->
+  <div class="form-section" id="step1">
+    <h2>🌟 Scegli il tuo Servizio</h2>
+    <div class="services-grid">
+      <div class="service-card" data-service="Manicure Professionale" data-price="25-50">
+        <span class="service-emoji">💅</span>
+        <div class="service-name">Manicure Professionale</div>
+        <div class="service-price">Da €25 a €50</div>
+      </div>
+      <div class="service-card" data-service="Pulizia Viso Profonda" data-price="35-65">
+        <span class="service-emoji">🌸</span>
+        <div class="service-name">Pulizia Viso Profonda</div>
+        <div class="service-price">Da €35 a €65</div>
+      </div>
+      <div class="service-card" data-service="Massaggi Rilassanti" data-price="40-80">
+        <span class="service-emoji">💆</span>
+        <div class="service-name">Massaggi Rilassanti</div>
+        <div class="service-price">Da €40 a €80</div>
+      </div>
+      <div class="service-card" data-service="Trucco e Make-up" data-price="55-120">
+        <span class="service-emoji">💄</span>
+        <div class="service-name">Trucco e Make-up</div>
+        <div class="service-price">Da €55 a €120</div>
+      </div>
+    </div>
+    <div class="navigation-buttons">
+      <div></div>
+      <button class="btn btn-primary" id="nextStep1" disabled>Continua →</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Selezione Data e Ora -->
+  <div class="form-section hidden" id="step2">
+    <h2>📅 Scegli Data e Ora</h2>
+    <div id="loadingCalendar" class="alert" style="display: none;">
+      Caricamento date disponibili...
+    </div>
+    <div class="calendar-container" id="calendarContainer">
+      <!-- Le date verranno caricate dinamicamente -->
+    </div>
+    <div class="time-slots" id="timeSlots">
+      <!-- Gli orari verranno caricati in base alla data selezionata -->
+    </div>
+    <div class="navigation-buttons">
+      <button class="btn btn-secondary" id="prevStep2">← Indietro</button>
+      <button class="btn btn-primary" id="nextStep2" disabled>Continua →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Dati Personali -->
+  <div class="form-section hidden" id="step3">
+    <h2>👤 I tuoi Dati</h2>
+    <div class="form-group">
+      <label for="customerName">Nome e Cognome *</label>
+      <input type="text" id="customerName" required placeholder="Inserisci il tuo nome completo">
+    </div>
+    <div class="form-group">
+      <label for="customerEmail">Email (opzionale)</label>
+      <input type="email" id="customerEmail" placeholder="la.tua@email.com">
+    </div>
+    <div class="form-group">
+      <label for="customerPhone">Telefono (opzionale)</label>
+      <input type="tel" id="customerPhone" placeholder="+39 123 456 7890">
+    </div>
+    <div class="navigation-buttons">
+      <button class="btn btn-secondary" id="prevStep3">← Indietro</button>
+      <button class="btn btn-primary" id="nextStep3" disabled>Continua →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Riepilogo e Conferma -->
+  <div class="form-section hidden" id="step4">
+    <h2>✨ Riepilogo Prenotazione</h2>
+    <div class="summary-card">
+      <div class="summary-item">
+        <span><strong>Servizio:</strong></span>
+        <span id="summaryService">-</span>
+      </div>
+      <div class="summary-item">
+        <span><strong>Data:</strong></span>
+        <span id="summaryDate">-</span>
+      </div>
+      <div class="summary-item">
+        <span><strong>Ora:</strong></span>
+        <span id="summaryTime">-</span>
+      </div>
+      <div class="summary-item">
+        <span><strong>Nome:</strong></span>
+        <span id="summaryName">-</span>
+      </div>
+      <div class="summary-item">
+        <span><strong>Prezzo:</strong></span>
+        <span id="summaryPrice">-</span>
+      </div>
+    </div>
+    <div class="navigation-buttons">
+      <button class="btn btn-secondary" id="prevStep4">← Indietro</button>
+      <button class="btn btn-primary" id="confirmBooking">🎉 Conferma Prenotazione</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Conferma Finale (nascosto inizialmente) -->
+  <div class="form-section hidden" id="step5">
+    <h2>🎉 Prenotazione Confermata!</h2>
+    <div class="alert alert-success">
+      <strong>Perfetto!</strong> La tua prenotazione è stata confermata con successo. 
+      Ti aspettiamo per il tuo appuntamento! 💖
+    </div>
+    <div class="summary-card">
+      <p style="font-size: 1.2em; margin-bottom: 1rem;">
+        <strong>Ricorda:</strong>
+      </p>
+      <p>📍 Via della Bellezza, 123 - Milano</p>
+      <p>📞 +39 02 1234567</p>
+      <p style="margin-top: 1rem; font-style: italic;">
+        Ti consigliamo di arrivare 5 minuti prima dell'appuntamento.
+      </p>
+    </div>
+    <div class="navigation-buttons">
+      <button class="btn btn-primary" onclick="location.reload()">Nuova Prenotazione</button>
+      <button class="btn btn-secondary" onclick="window.location.href='index.html'">Torna alla Home</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>🌷 The Super Long Nail - Prenota con un click</p>
+</footer>
+
+<script src="js/prenota.js"></script>
 </body>
 </html>

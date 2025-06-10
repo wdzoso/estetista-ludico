@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerca Appuntamento - The Super Long Nail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+        :root {
+            --lilla-chiaro: #f3e5f5; --lilla: #d1c4e9; --lilla-scuro: #9575cd;
+            --rosa: #f48fb1; --accent: #ce93d8; --testo: #4a148c; --bianco: #fff;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Fredoka', sans-serif; background-color: var(--lilla-chiaro); }
+
+        .container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: var(--bianco);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 { color: var(--testo); margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.5rem; text-align: left; }
+        label { display: block; margin-bottom: 0.5rem; color: var(--testo); font-weight: 600; }
+        input {
+            width: 100%; padding: 1rem; border: 2px solid var(--lilla);
+            border-radius: 10px; font-size: 1rem; font-family: 'Fredoka', sans-serif;
+        }
+        .btn {
+            padding: 1rem 2rem; border: none; border-radius: 25px; font-size: 1.1em;
+            font-weight: 600; cursor: pointer; background: linear-gradient(45deg, var(--accent), var(--rosa));
+            color: var(--bianco); width: 100%;
+        }
+        #resultContainer { margin-top: 2rem; text-align: left; }
+        .alert { padding: 1rem; border-radius: 10px; font-weight: 600; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        .summary-card {
+            background: linear-gradient(135deg, var(--lilla-chiaro), var(--bianco));
+            border: 2px solid var(--accent); border-radius: 20px; padding: 2rem;
+        }
+        .summary-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 0; border-bottom: 1px solid var(--lilla);
+        }
+        .summary-item:last-of-type { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="img/logo.png" alt="Logo" class="logo" />
+        <nav>
+            <ul>
+                <li><a href="index.html">🏠 Home</a></li>
+                <li><a href="servizi_claude.html">💅 Servizi</a></li>
+                <li><a href="prenota.html">📅 Prenota</a></li>
+                <li><a href="visualizza.html" class="active">Cerca Appuntamento</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>🔍 Cerca la tua Prenotazione</h1>
+        <p style="color: var(--testo); margin-top: -1rem; margin-bottom: 2rem;">
+            Inserisci l'ID e il codice segreto che hai ricevuto al momento della conferma.
+        </p>
+        <form id="searchForm">
+            <div class="form-group">
+                <label for="appointmentId">ID Prenotazione</label>
+                <input type="number" id="appointmentId" required placeholder="Es. 123">
+            </div>
+            <div class="form-group">
+                <label for="uniqueCode">Codice Segreto</label>
+                <input type="text" id="uniqueCode" required placeholder="Es. a1b2c3d4">
+            </div>
+            <button type="submit" class="btn">Cerca</button>
+        </form>
+
+        <div id="resultContainer"></div>
+    </div>
+
+    <script src="js/visualizza.js"></script>
+</body>
+</html>
