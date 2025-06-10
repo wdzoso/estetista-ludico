@@ -413,11 +413,11 @@
     <img src="img/logo.png" alt="Logo" class="logo" />
     <nav>
       <ul>
-        <li><a href="index.html">🏠 Home</a></li>
-        <li><a href="servizi_claude.html" class="active">💅 Servizi</a></li>
-        <li><a href="prenota.html">📅 Prenota</a></li>
-        <li><a href="registrati.html">📝 Registrati</a></li>
-        <li><a href="login.html">🔐 Login</a></li>
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="servizi_claude.html">💅 Servizi</a></li>
+      <li><a href="prenota.html">📅 Prenota</a></li>
+      <li><a href="visualizza.html">📝 Appuntamenti</a></li>
+ <!-- <li><a href="login.html">🔐 Login</a></li> -->
       </ul>
     </nav>
   </header>
@@ -521,15 +521,15 @@
         <div class="service-details">
           <h3 class="service-title">💄 Trucco e Make-up</h3>
           <p class="service-description">
-            Sguardo magnetico e irresistibile con le nostre extension ciglia professionali. 
-            Ciglia lunghe, folte e naturali che valorizzano la tua bellezza senza bisogno di mascara.
+            Sguardo magnetico e irresistibile con il nostro make-up professionale. 
+            Ciglia lunghe, viso brillante e definizione della palette più adatta al tuo viso.
           </p>
           <ul class="service-features">
-            <li>Extension ciglia one-to-one</li>
-            <li>Volume russo 2D-6D</li>
-            <li>Ciglia colorate e glitter</li>
-            <li>Laminazione e lifting ciglia</li>
+            <li>Armocromia e palette di colori personalizzata</li>
+            <li>Trattamento ciglia e sopracciglia</li>
+            <li>Glitter, gloss e lifting</li>
             <li>Ritocchi e manutenzione</li>
+            <li>Utilizzo di prodotti professionali</li>
           </ul>
           <div class="price-tag">Da €55 a €120</div>
         </div>
@@ -559,7 +559,7 @@
     class ServiceGallery {
       constructor() {
         this.currentSlide = 0;
-        this.totalSlides = 6;
+        this.totalSlides = document.querySelectorAll('.gallery-slide').length;
         this.isPlaying = true;
         this.slideInterval = null;
         this.progressInterval = null;

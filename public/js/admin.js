@@ -1,200 +1,175 @@
-// Configurazione API - cambia in produzione!
 const API_BASE_URL = "http://localhost:5000/api";
 
-// Genera gli slot orari dalle 10:00 alle 18:00 ogni 30 minuti
+// --- DEFINIZIONE DI TUTTE LE FUNZIONI ---
+
+// Genera la griglia degli orari selezionabili
 function generateTimeSlots() {
   const timeGrid = document.getElementById('timeGrid');
-  if (!timeGrid) return; // Verifica che l'elemento esista
-  
+  if (!timeGrid) return;
   const times = [];
-  
   for (let hour = 10; hour <= 17; hour++) {
-    times.push(`${hour.toString().padStart(2, '0')}:00`);
-    if (hour < 17) {
-      times.push(`${hour.toString().padStart(2, '0')}:30`);
-    }
+    times.push(`${String(hour).padStart(2, '0')}:00`);
+    if (hour < 17) times.push(`${String(hour).padStart(2, '0')}:30`);
   }
   times.push('18:00');
-  
   timeGrid.innerHTML = times.map(time => 
     `<div class="time-slot" data-time="${time}" onclick="toggleTimeSlot(this)">${time}</div>`
   ).join('');
 }
 
+// Attiva/disattiva la selezione di un orario
 function toggleTimeSlot(element) {
   element.classList.toggle('selected');
 }
 
+// Pulisce la selezione degli orari e resetta il form
 function clearSelection() {
-  document.querySelectorAll('.time-slot.selected').forEach(el => {
-    el.classList.remove('selected');
-  });
+  document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
   document.getElementById('slotForm').reset();
 }
 
-function getSelectedTimes() {
-  return Array.from(document.querySelectorAll('.time-slot.selected'))
-    .map(el => el.dataset.time);
+// Formatta una data in un formato leggibile
+function formatDate(dateStr) {
+  const date = new Date(dateStr + 'T00:00:00');
+  return date.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-function generateDates(startDate, endDate, repeatType) {
-  const dates = [];
-  const start = new Date(startDate);
-  const end = endDate ? new Date(endDate) : new Date(startDate);
+// Carica tutti gli slot (disponibili e prenotati) dal server
+async function loadSlots() {
+  const slotList = document.getElementById('slotList');
+  if (!slotList) return;
+  slotList.innerHTML = '<p>Caricamento in corso...</p>';
   
-  if (repeatType === 'none') {
-    dates.push(startDate);
-    if (endDate && endDate !== startDate) {
-      dates.push(endDate);
-    }
-  } else {
-    const increment = repeatType === 'weekly' ? 7 : 14;
-    let current = new Date(start);
+  try {
+    const response = await fetch(`${API_BASE_URL}/admin/all-slots`);
+    const slots = await response.json();
     
-    while (current <= end) {
-      dates.push(current.toISOString().split('T')[0]);
-      current.setDate(current.getDate() + increment);
+    if (slots.length === 0) {
+      slotList.innerHTML = '<li>Nessun orario gestito al momento.</li>';
+      return;
     }
+    
+    slotList.innerHTML = slots
+      .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`))
+      .map(slot => {
+        let detailsHtml = '';
+        let buttonHtml = '';
+
+        if (slot.booked && slot.appointment) {
+            detailsHtml = `
+                <div class="details-group">
+                    <span class="status-badge status-booked">Prenotato da: <strong>${slot.appointment.name}</strong></span>
+                    <span class="service-info">(${slot.appointment.service})</span>
+                </div>`;
+            buttonHtml = `<button class="delete-btn delete-btn-booked" onclick="deleteAppointment('${slot.date}', '${slot.time}')">🗑️ Cancella Prenotazione</button>`;
+        } else {
+            detailsHtml = `<div class="details-group"><span class="status-badge status-available">Disponibile</span></div>`;
+            buttonHtml = `<button class="delete-btn" onclick="deleteSlot('${slot.date}', '${slot.time}')">🗑️ Elimina Slot</button>`;
+        }
+
+        return `<li class="slot-item ${slot.booked ? 'booked' : ''}">
+                  <div class="slot-info">
+                    <span><strong>${formatDate(slot.date)}</strong> alle <strong>${slot.time}</strong></span>
+                    ${detailsHtml}
+                  </div>
+                  ${buttonHtml}
+                </li>`;
+      }).join('');
+  } catch (error) {
+    slotList.innerHTML = '<li style="color: red;">Errore nel caricamento degli slot. Controlla la console per dettagli.</li>';
+    console.error('Errore in loadSlots:', error);
   }
-  
-  return dates;
 }
 
-async function addSlots(slots) {
-  const results = [];
-  for (const slot of slots) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/admin/add-slot`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(slot)
-      });
-      const result = await response.json();
-      results.push({success: response.ok, slot, result});
-    } catch (error) {
-      results.push({success: false, slot, error: error.message});
-    }
-  }
-  return results;
-}
-
+// Elimina uno SLOT DISPONIBILE
 async function deleteSlot(date, time) {
+  if (!confirm(`Sei sicuro di voler eliminare lo SLOT del ${formatDate(date)} alle ${time}?`)) return;
   try {
     const response = await fetch(`${API_BASE_URL}/admin/delete-slot`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({date, time})
     });
-    if (response.ok) {
-      loadSlots();
-    } else {
-      alert('Errore nell\'eliminazione dello slot');
-    }
+    if (!response.ok) throw new Error('Errore dal server');
+    loadSlots();
   } catch (error) {
-    alert('Errore di connessione');
+    alert(`Errore durante l'eliminazione dello slot: ${error.message}`);
   }
 }
 
-async function loadSlots() {
+// Elimina una PRENOTAZIONE ESISTENTE
+async function deleteAppointment(date, time) {
+  if (!confirm(`Sei sicuro di voler CANCELLARE la PRENOTAZIONE del ${formatDate(date)} alle ${time}?`)) return;
   try {
-    document.body.classList.add('loading');
-    const response = await fetch(`${API_BASE_URL}/admin/all-slots`);
-    const slots = await response.json();
-    
-    const slotList = document.getElementById('slotList');
-    if (!slotList) return;
-    
-    slotList.innerHTML = slots
-      .sort((a, b) => new Date(a.date + ' ' + a.time) - new Date(b.date + ' ' + b.time))
-      .map(slot => `
-        <li class="slot-item ${slot.booked ? 'booked' : ''}">
-          <div class="slot-info">
-            <span><strong>${formatDate(slot.date)}</strong> alle <strong>${slot.time}</strong></span>
-            <span class="status-badge ${slot.booked ? 'status-booked' : 'status-available'}">
-              ${slot.booked ? 'Prenotato' : 'Disponibile'}
-            </span>
-          </div>
-          ${!slot.booked ? `<button class="delete-btn" onclick="deleteSlot('${slot.date}', '${slot.time}')">🗑️ Elimina</button>` : ''}
-        </li>
-      `).join('');
+    const response = await fetch(`${API_BASE_URL}/admin/delete-appointment`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date, time })
+    });
+    if (!response.ok) throw new Error('Errore dal server');
+    alert('Prenotazione eliminata con successo.');
+    loadSlots();
   } catch (error) {
-    alert('Errore nel caricamento degli slot');
-    console.error('Error loading slots:', error);
-  } finally {
-    document.body.classList.remove('loading');
+    alert(`Errore durante la cancellazione della prenotazione: ${error.message}`);
   }
 }
 
-function formatDate(dateStr) {
-  const date = new Date(dateStr + 'T00:00:00');
-  return date.toLocaleDateString('it-IT', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
+// --- ESECUZIONE DEL CODICE E COLLEGAMENTO EVENTI ---
 
-// Inizializzazione quando il DOM è caricato
+// Quando il documento è pronto, avvia le funzioni iniziali.
 document.addEventListener('DOMContentLoaded', function() {
-  // Genera gli slot orari
   generateTimeSlots();
-  
-  // Carica gli slot esistenti
   loadSlots();
-  
-  // Event listener per il form, se esiste
+
   const slotForm = document.getElementById('slotForm');
   if (slotForm) {
     slotForm.addEventListener('submit', async function(e) {
       e.preventDefault();
-      
       const startDate = document.getElementById('startDate').value;
       const endDate = document.getElementById('endDate').value;
       const repeatType = document.querySelector('input[name="repeat"]:checked').value;
-      const selectedTimes = getSelectedTimes();
-      
+      const selectedTimes = Array.from(document.querySelectorAll('.time-slot.selected')).map(el => el.dataset.time);
+
       if (!startDate || selectedTimes.length === 0) {
-        alert('Seleziona almeno una data e un orario');
-        return;
+        return alert('Seleziona almeno una data e un orario.');
       }
       
-      const dates = generateDates(startDate, endDate, repeatType);
-      const slots = [];
+      const dates = [];
+      let current = new Date(startDate + 'T00:00:00');
+      const end = endDate ? new Date(endDate + 'T00:00:00') : current;
+      const increment = repeatType === 'weekly' ? 7 : 14;
+
+      do {
+        dates.push(current.toISOString().split('T')[0]);
+        if (repeatType !== 'none') current.setDate(current.getDate() + increment);
+      } while (repeatType !== 'none' && current <= end);
+
+      const slotsToCreate = dates.flatMap(date => selectedTimes.map(time => ({date, time})));
       
-      dates.forEach(date => {
-        selectedTimes.forEach(time => {
-          slots.push({date, time});
-        });
-      });
+      if (slotsToCreate.length > 50 && !confirm(`Stai per creare ${slotsToCreate.length} slot. Continuare?`)) return;
       
-      if (slots.length > 50) {
-        if (!confirm(`Stai per creare ${slots.length} slot. Continuare?`)) {
-          return;
-        }
+      let successCount = 0;
+      for (const slot of slotsToCreate) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/admin/add-slot`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(slot)
+          });
+          if (response.ok) successCount++;
+        } catch (error) { console.error('Errore creazione slot:', error); }
       }
       
-      document.body.classList.add('loading');
-      const results = await addSlots(slots);
-      document.body.classList.remove('loading');
-      
-      const successful = results.filter(r => r.success).length;
-      const failed = results.length - successful;
-      
-      if (failed === 0) {
-        alert(`${successful} slot creati con successo!`);
-        clearSelection();
-        loadSlots();
-      } else {
-        alert(`${successful} slot creati, ${failed} errori. Alcuni slot potrebbero già esistere.`);
-        loadSlots();
-      }
+      alert(`${successCount} slot creati con successo. ${slotsToCreate.length - successCount} non creati (probabilmente già esistenti).`);
+      clearSelection();
+      loadSlots();
     });
   }
 });
 
-// Funzioni globali per i pulsanti
+// ESPONI LE FUNZIONI ALLA PAGINA per renderle accessibili da onclick=""
 window.toggleTimeSlot = toggleTimeSlot;
 window.clearSelection = clearSelection;
-window.deleteSlot = deleteSlot;
 window.loadSlots = loadSlots;
+window.deleteSlot = deleteSlot;
+window.deleteAppointment = deleteAppointment;

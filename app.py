@@ -2,25 +2,21 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
+import uuid
 
 app = Flask(__name__)
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# --- CONFIGURAZIONE DATABASE ---
+# Usa un percorso assoluto per il database per evitare problemi
+instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+os.makedirs(instance_path, exist_ok=True)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Configurazione per servire file statici dalla cartella public
-@app.route('/')
-def index():
-    return send_from_directory('public', 'admin.html')
-
-@app.route('/<path:filename>')
-def serve_static(filename):
-    return send_from_directory('public', filename)
-
-# MODELLI
+# --- MODELLI ---
 class AvailableSlot(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(10))  # formato: YYYY-MM-DD
@@ -32,11 +28,18 @@ class Appointment(db.Model):
     service = db.Column(db.String(100))
     date = db.Column(db.String(10))
     time = db.Column(db.String(5))
-    access_code = db.Column(db.String(100), unique=True)
+    access_code = db.Column(db.String(100), unique=True, nullable=False)
 
-# Le tabelle del database verranno create tramite lo script init_db.py separato
+# --- ROUTE PER FILE STATICI ---
+@app.route('/')
+def index():
+    return send_from_directory('public', 'admin.html')
 
-# API ADMIN: aggiungi slot disponibili
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('public', filename)
+
+# --- API ADMIN ---
 @app.route('/api/admin/add-slot', methods=['POST'])
 def add_slot():
     data = request.get_json()
@@ -45,7 +48,6 @@ def add_slot():
     db.session.commit()
     return jsonify({'message': 'Slot disponibile aggiunto'}), 201
 
-# API ADMIN: elimina slot disponibile
 @app.route('/api/admin/delete-slot', methods=['DELETE'])
 def delete_slot():
     data = request.get_json()
@@ -53,68 +55,101 @@ def delete_slot():
     if slot:
         db.session.delete(slot)
         db.session.commit()
-        return jsonify({'message': 'Slot eliminato'}), 200
+        return jsonify({'message': 'Slot disponibile eliminato'}), 200
     return jsonify({'error': 'Slot non trovato'}), 404
 
-# API ADMIN: recupera tutti gli slot (inclusi quelli prenotati)
+# --- NUOVA API PER ELIMINARE APPUNTAMENTI PRENOTATI ---
+@app.route('/api/admin/delete-appointment', methods=['DELETE'])
+def delete_appointment():
+    data = request.get_json()
+    appointment = Appointment.query.filter_by(date=data['date'], time=data['time']).first()
+    if appointment:
+        db.session.delete(appointment)
+        db.session.commit()
+        return jsonify({'message': 'Appuntamento eliminato con successo'}), 200
+    return jsonify({'error': 'Appuntamento non trovato'}), 404
+
+# --- API ADMIN /api/admin/all-slots MODIFICATA ---
+# Ora restituisce anche i dettagli dell'appuntamento se lo slot è prenotato
 @app.route('/api/admin/all-slots', methods=['GET'])
 def get_all_slots():
     slots = AvailableSlot.query.all()
-    booked = Appointment.query.all()
-    booked_set = {(b.date, b.time) for b in booked}
+    appointments = Appointment.query.all()
+    # Mappa per una ricerca veloce: {(data, ora): oggetto_appuntamento}
+    booked_map = {(app.date, app.time): app for app in appointments}
     
     result = []
     for slot in slots:
+        is_booked = (slot.date, slot.time) in booked_map
+        appointment_details = None
+        if is_booked:
+            appointment = booked_map[(slot.date, slot.time)]
+            appointment_details = {
+                'id': appointment.id,
+                'name': appointment.name,
+                'service': appointment.service,
+                'access_code': appointment.access_code
+            }
+        
         result.append({
             'id': slot.id,
             'date': slot.date,
             'time': slot.time,
-            'booked': (slot.date, slot.time) in booked_set
+            'booked': is_booked,
+            'appointment': appointment_details # Restituisce i dettagli o null
         })
     return jsonify(result)
 
-# API GET: recupera solo gli slot non ancora prenotati
+# --- API UTENTE ---
 @app.route('/api/available-slots', methods=['GET'])
 def get_available_slots():
-    # Prendi tutti gli slot e filtra quelli già prenotati
     slots = AvailableSlot.query.all()
     booked = Appointment.query.all()
     booked_set = {(b.date, b.time) for b in booked}
-    available = [
-        {'date': s.date, 'time': s.time}
-        for s in slots if (s.date, s.time) not in booked_set
-    ]
+    available = [{'date': s.date, 'time': s.time} for s in slots if (s.date, s.time) not in booked_set]
     return jsonify(available)
 
-# API UTENTE: prenota appuntamento
 @app.route('/api/book', methods=['POST'])
 def book_appointment():
-    import uuid
     data = request.get_json()
-
-    # Verifica se già prenotato
-    existing = Appointment.query.filter_by(date=data['date'], time=data['time']).first()
-    if existing:
+    if Appointment.query.filter_by(date=data['date'], time=data['time']).first():
         return jsonify({'error': 'Orario già prenotato'}), 400
 
-    # Genera codice univoco
-    access_code = str(uuid.uuid4())
+    import random, string
 
     new_app = Appointment(
         name=data['name'],
         service=data['service'],
         date=data['date'],
         time=data['time'],
-        access_code=access_code
+        access_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6)) # Codice di accesso casuale di 6 caratteri
     )
     db.session.add(new_app)
     db.session.commit()
+    return jsonify({'message': 'Appuntamento confermato', 'access_code': new_app.access_code}), 201
 
+@app.route('/api/appointment/search', methods=['POST'])
+def search_appointment():
+    data = request.get_json()
+    access_code = data.get('access_code')
+    
+    if not access_code:
+        return jsonify({'error': 'Codice di accesso richiesto'}), 400
+    
+    appointment = Appointment.query.filter_by(access_code=access_code).first()
+    
+    if not appointment:
+        return jsonify({'error': 'Prenotazione non trovata'}), 404
+    
     return jsonify({
-        'message': 'Appuntamento confermato',
-        'access_code': access_code
-    }), 201
-
+        'id': appointment.id,
+        'name': appointment.name,
+        'service': appointment.service,
+        'date': appointment.date,
+        'time': appointment.time
+    }), 200
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
