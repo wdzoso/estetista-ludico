@@ -32,6 +32,7 @@ class Appointment(db.Model):
     service = db.Column(db.String(100))
     date = db.Column(db.String(10))
     time = db.Column(db.String(5))
+    access_code = db.Column(db.String(100), unique=True)
 
 # Le tabelle del database verranno create tramite lo script init_db.py separato
 
@@ -88,21 +89,32 @@ def get_available_slots():
 # API UTENTE: prenota appuntamento
 @app.route('/api/book', methods=['POST'])
 def book_appointment():
+    import uuid
     data = request.get_json()
+
     # Verifica se già prenotato
     existing = Appointment.query.filter_by(date=data['date'], time=data['time']).first()
     if existing:
         return jsonify({'error': 'Orario già prenotato'}), 400
 
+    # Genera codice univoco
+    access_code = str(uuid.uuid4())
+
     new_app = Appointment(
         name=data['name'],
         service=data['service'],
         date=data['date'],
-        time=data['time']
+        time=data['time'],
+        access_code=access_code
     )
     db.session.add(new_app)
     db.session.commit()
-    return jsonify({'message': 'Appuntamento confermato'}), 201
+
+    return jsonify({
+        'message': 'Appuntamento confermato',
+        'access_code': access_code
+    }), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True)
