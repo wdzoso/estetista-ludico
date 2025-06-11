@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from dotenv import load_dotenv
 import os
 import uuid
 
+load_dotenv()
+# --- INIZIALIZZAZIONE ---
 app = Flask(__name__)
 CORS(app)
 
@@ -13,6 +16,9 @@ instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instan
 os.makedirs(instance_path, exist_ok=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['ENV'] = os.getenv('FLASK_ENV', 'production')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-key')
+app.config['DATABASE'] = os.getenv('DATABASE_PATH', 'instance/database.db')
 
 db = SQLAlchemy(app)
 
