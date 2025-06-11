@@ -1,4 +1,8 @@
-const API_BASE_URL = "http://localhost:5000/api";
+//const API_BASE_URL = "http://localhost:5000/api";
+
+const API_BASE_URL = window.location.hostname.includes("localhost")
+  ? "http://localhost:5000/api"
+  : "https://https://estetista-ludico.onrender.com/api";
 
 // --- DEFINIZIONE DI TUTTE LE FUNZIONI ---
 
@@ -30,7 +34,10 @@ function clearSelection() {
 
 // Formatta una data in un formato leggibile
 function formatDate(dateStr) {
-  const date = new Date(dateStr + 'T00:00:00');
+  // CORREZIONE: Usa direttamente la stringa senza conversione tramite Date
+  // per evitare problemi di fuso orario
+  const [year, month, day] = dateStr.split('-');
+  const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
   return date.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
 
@@ -114,6 +121,20 @@ async function deleteAppointment(date, time) {
   }
 }
 
+// CORREZIONE: Funzione helper per creare date corrette senza problemi di fuso orario
+function createLocalDate(dateString) {
+  const [year, month, day] = dateString.split('-');
+  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+}
+
+// CORREZIONE: Funzione helper per ottenere la data nel formato YYYY-MM-DD
+function getDateString(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 // --- ESECUZIONE DEL CODICE E COLLEGAMENTO EVENTI ---
 
 // Quando il documento è pronto, avvia le funzioni iniziali.
@@ -135,12 +156,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       const dates = [];
-      let current = new Date(startDate + 'T00:00:00');
-      const end = endDate ? new Date(endDate + 'T00:00:00') : current;
+      // CORREZIONE: Usa la funzione helper per creare date corrette
+      let current = createLocalDate(startDate);
+      const end = endDate ? createLocalDate(endDate) : current;
       const increment = repeatType === 'weekly' ? 7 : 14;
 
       do {
-        dates.push(current.toISOString().split('T')[0]);
+        // CORREZIONE: Usa la funzione helper per ottenere la stringa della data
+        dates.push(getDateString(current));
         if (repeatType !== 'none') current.setDate(current.getDate() + increment);
       } while (repeatType !== 'none' && current <= end);
 
