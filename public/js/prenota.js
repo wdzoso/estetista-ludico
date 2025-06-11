@@ -1,5 +1,9 @@
 // Configurazione API - deve corrispondere al tuo backend
-const API_BASE_URL = "http://localhost:5000/api";
+//const API_BASE_URL = "http://localhost:5000/api";
+
+const API_BASE_URL = window.location.hostname.includes("localhost")
+  ? "http://localhost:5000/api"
+  : "https://https://estetista-ludico.onrender.com/api";
 
 class BookingSystem {
   constructor() {
