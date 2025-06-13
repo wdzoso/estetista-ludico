@@ -2,7 +2,7 @@
 
 const API_BASE_URL = window.location.hostname.includes("localhost")
   ? "http://localhost:5000/api"
-  : "https://https://estetista-ludico.onrender.com/api";
+  : "https://estetista-ludico.onrender.com/api";
 
 // --- DEFINIZIONE DI TUTTE LE FUNZIONI ---
 
