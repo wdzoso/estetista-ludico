@@ -368,34 +368,327 @@
       100% { transform: rotate(360deg); }
     }
 
+    /* MIGLIORAMENTI MOBILE SPECIFICI */
     @media (max-width: 768px) {
+      /* Header mobile-friendly dall'esterno */
+      header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+        text-align: center;
+      }
+
+      .logo {
+        height: 50px;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+      }
+
+      nav li {
+        flex: 0 0 auto;
+      }
+
+      nav a {
+        font-size: 0.9em;
+        padding: 8px 12px;
+        border-radius: 15px;
+        background: rgba(255,255,255,0.2);
+        transition: all 0.3s ease;
+      }
+
+      /* Hero ottimizzato */
+      .hero {
+        padding: 40px 20px 30px;
+        border-bottom-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+      }
+
+      .hero h1 {
+        font-size: 2em;
+        margin-bottom: 15px;
+      }
+
+      .hero p {
+        font-size: 1.1em;
+        margin-bottom: 0;
+      }
+
+      /* Container principale */
       .prenotazione-container {
         padding: 1rem;
       }
 
+      /* Step indicator compatto e scorrevole */
       .step-indicator {
-        flex-direction: column;
-        gap: 0.5rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0 10px 10px;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        justify-content: flex-start;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
       }
 
+      .step-indicator::-webkit-scrollbar {
+        display: none;
+      }
+
+      .step {
+        flex: 0 0 auto;
+        padding: 0.8rem 1rem;
+        font-size: 0.9em;
+      }
+
+      .step span:first-child {
+        background: rgba(255,255,255,0.3);
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8em;
+      }
+
+      /* Sezioni form più compatte */
+      .form-section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 15px;
+      }
+
+      .form-section h2 {
+        font-size: 1.5em;
+        margin-bottom: 1.2rem;
+      }
+
+      /* Griglia servizi ottimizzata */
       .services-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
       }
 
+      .service-card {
+        padding: 1.2rem;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        gap: 1rem;
+      }
+
+      .service-card:hover {
+        transform: none;
+      }
+
+      .service-card.selected {
+        transform: none;
+      }
+
+      .service-emoji {
+        font-size: 2.5rem;
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+
+      .service-details {
+        flex: 1;
+      }
+
+      .service-name {
+        font-size: 1.1em;
+        margin-bottom: 0.3rem;
+      }
+
+      .service-price {
+        font-size: 1em;
+      }
+
+      /* Calendario mobile-friendly */
       .calendar-container {
         grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
       }
 
+      .date-card {
+        padding: 0.8rem;
+        border-radius: 12px;
+      }
+
+      .date-card:hover {
+        transform: none;
+      }
+
+      .date-day {
+        font-size: 1em;
+        margin-bottom: 0.3rem;
+      }
+
+      .date-info {
+        font-size: 0.8em;
+      }
+
+      /* Time slots compatti */
       .time-slots {
         grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+        margin-top: 1rem;
       }
 
+      .time-slot {
+        padding: 0.7rem 0.5rem;
+        border-radius: 8px;
+        font-size: 0.9em;
+      }
+
+      /* Form groups */
+      .form-group {
+        margin-bottom: 1.2rem;
+      }
+
+      .form-group input {
+        padding: 0.9rem;
+        font-size: 1rem;
+        border-radius: 8px;
+      }
+
+      /* Summary card mobile */
+      .summary-card {
+        padding: 1.5rem;
+        border-radius: 15px;
+      }
+
+      .summary-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+        padding: 0.8rem 0;
+        text-align: left;
+      }
+
+      .summary-item span:first-child {
+        font-size: 0.9em;
+        opacity: 0.8;
+      }
+
+      .summary-item span:last-child {
+        font-weight: 600;
+        font-size: 1em;
+      }
+
+      .summary-item:last-child {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1.1em;
+        padding-top: 1rem;
+        border-top: 2px solid var(--accent);
+      }
+
+      /* Bottoni navigazione */
       .navigation-buttons {
         flex-direction: column;
+        gap: 0.8rem;
+        margin-top: 1.5rem;
       }
 
       .btn {
         width: 100%;
+        padding: 0.9rem 1.5rem;
+        font-size: 1em;
+        border-radius: 12px;
+        letter-spacing: 0.3px;
+      }
+
+      /* Alert messages */
+      .alert {
+        padding: 0.8rem;
+        border-radius: 8px;
+        font-size: 0.9em;
+      }
+
+      /* Footer */
+      footer {
+        padding: 15px;
+        font-size: 0.9em;
+      }
+
+      /* Miglioramenti touch */
+      .service-card,
+      .date-card,
+      .time-slot,
+      .btn {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      /* Riduzione animazioni per prestazioni mobile */
+      * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.2s !important;
+      }
+
+      /* Fix per viewport mobile */
+      .hero,
+      .form-section {
+        min-height: auto;
+      }
+    }
+
+    /* Extra small devices (molto piccoli) */
+    @media (max-width: 480px) {
+      .prenotazione-container {
+        padding: 0.8rem;
+      }
+
+      .form-section {
+        padding: 1rem;
+        border-radius: 12px;
+      }
+
+      .form-section h2 {
+        font-size: 1.3em;
+      }
+
+      .service-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
+      }
+
+      .service-emoji {
+        font-size: 2rem;
+      }
+
+      .calendar-container {
+        grid-template-columns: 1fr;
+      }
+
+      .time-slots {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .step {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.8em;
+      }
+
+      .step span:last-child {
+        display: none;
+      }
+
+      .step span:first-child {
+        width: 30px;
+        height: 30px;
       }
     }
   </style>
@@ -451,23 +744,31 @@
     <div class="services-grid">
       <div class="service-card" data-service="Manicure Professionale" data-price="25-50">
         <span class="service-emoji">💅</span>
-        <div class="service-name">Manicure Professionale</div>
-        <div class="service-price">Da €25 a €50</div>
+        <div class="service-details">
+          <div class="service-name">Manicure Professionale</div>
+          <div class="service-price">Da €25 a €50</div>
+        </div>
       </div>
       <div class="service-card" data-service="Pulizia Viso Profonda" data-price="35-65">
         <span class="service-emoji">🌸</span>
-        <div class="service-name">Pulizia Viso Profonda</div>
-        <div class="service-price">Da €35 a €65</div>
+        <div class="service-details">
+          <div class="service-name">Pulizia Viso Profonda</div>
+          <div class="service-price">Da €35 a €65</div>
+        </div>
       </div>
       <div class="service-card" data-service="Massaggi Rilassanti" data-price="40-80">
         <span class="service-emoji">💆</span>
-        <div class="service-name">Massaggi Rilassanti</div>
-        <div class="service-price">Da €40 a €80</div>
+        <div class="service-details">
+          <div class="service-name">Massaggi Rilassanti</div>
+          <div class="service-price">Da €40 a €80</div>
+        </div>
       </div>
       <div class="service-card" data-service="Trucco e Make-up" data-price="55-120">
         <span class="service-emoji">💄</span>
-        <div class="service-name">Trucco e Make-up</div>
-        <div class="service-price">Da €55 a €120</div>
+        <div class="service-details">
+          <div class="service-name">Trucco e Make-up</div>
+          <div class="service-price">Da €55 a €120</div>
+        </div>
       </div>
     </div>
     <div class="navigation-buttons">

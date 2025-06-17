@@ -5,19 +5,360 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Estetista Ludica</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css" />
+  <style>
+:root {
+  --lilla-chiaro: #f3e5f5;
+  --lilla: #d1c4e9;
+  --lilla-scuro: #9575cd;
+  --rosa: #f48fb1;
+  --accent: #ce93d8;
+  --testo: #4a148c;
+  --bianco: #fff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Fredoka', sans-serif;
+  background-color: var(--lilla-chiaro);
+  color: var(--testo);
+}
+
+header {
+  background-color: var(--lilla);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.logo {
+  height: 70px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--testo);
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: var(--rosa);
+}
+
+/* Menu hamburger per mobile */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: var(--testo);
+  margin: 3px 0;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+.hero {
+  text-align: center;
+  background: linear-gradient(to bottom, var(--lilla), var(--rosa));
+  color: var(--bianco);
+  padding: 60px 20px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+.hero h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 1.2em;
+}
+
+.cta-button {
+  background-color: var(--accent);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 20px;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+  background-color: var(--rosa);
+}
+
+.servizi {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.card {
+  background-color: var(--bianco);
+  padding: 25px;
+  width: 240px;
+  border-radius: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  font-size: 1.4em;
+}
+
+.funziona {
+  background-color: var(--lilla);
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--testo);
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  margin-top: 50px;
+}
+
+.funziona ol {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.funziona li::before {
+  content: "💅 ";
+}
+
+footer {
+  background-color: var(--rosa);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-top: 5px solid var(--accent);
+}
+
+/* RESPONSIVE DESIGN - MOBILE FIRST */
+@media (max-width: 768px) {
+  /* Header mobile ottimizzato */
+  header {
+    padding: 15px 20px;
+    flex-wrap: nowrap;
+  }
+  
+  .logo {
+    height: 50px;
+  }
+  
+  /* Menu hamburger */
+  .hamburger {
+    display: flex;
+  }
+  
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--lilla);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+  
+  nav.open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  nav ul {
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav li {
+    border-bottom: 1px solid rgba(74, 20, 140, 0.1);
+  }
+  
+  nav li:last-child {
+    border-bottom: none;
+  }
+  
+  nav a {
+    display: block;
+    padding: 15px 20px;
+    font-size: 1.1em;
+  }
+  
+  /* Hero section mobile */
+  .hero {
+    padding: 40px 15px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+  }
+  
+  .hero h1 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    line-height: 1.2;
+  }
+  
+  .hero p {
+    font-size: 1em;
+    margin-bottom: 25px;
+  }
+  
+  .cta-button {
+    padding: 15px 30px;
+    font-size: 1.1em;
+  }
+  
+  /* Servizi section mobile */
+  .servizi {
+    padding: 30px 15px;
+  }
+  
+  .servizi h2 {
+    font-size: 1.6em;
+    margin-bottom: 20px;
+  }
+  
+  .cards {
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .card {
+    width: calc(100% - 40px);
+    max-width: 300px;
+    padding: 20px;
+    margin: 0 auto;
+  }
+  
+  .card h3 {
+    font-size: 1.3em;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    font-size: 0.95em;
+    line-height: 1.4;
+  }
+  
+  /* Come funziona section mobile */
+  .funziona {
+    padding: 30px 15px;
+    margin-top: 30px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+  }
+  
+  .funziona h2 {
+    font-size: 1.6em;
+    margin-bottom: 20px;
+  }
+  
+  .funziona ol {
+    flex-direction: column;
+    gap: 15px;
+    max-width: 250px;
+    margin: 0 auto;
+  }
+  
+  .funziona li {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 1em;
+  }
+  
+  /* Footer mobile */
+  footer {
+    padding: 20px 15px;
+    font-size: 0.9em;
+  }
+  
+  footer p {
+    margin: 5px 0;
+  }
+}
+
+/* Piccoli smartphone */
+@media (max-width: 480px) {
+  .hero h1 {
+    font-size: 1.6em;
+  }
+  
+  .hero p {
+    font-size: 0.95em;
+  }
+  
+  .card {
+    width: calc(100% - 20px);
+    padding: 18px;
+  }
+  
+  .servizi h2,
+  .funziona h2 {
+    font-size: 1.4em;
+  }
+}
+  </style>
 </head>
 <body>
 
 <header>
   <img src="img/logo.png" alt="Logo" class="logo" />
-  <nav>
+  
+  <!-- Menu hamburger per mobile -->
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  
+  <nav id="nav">
     <ul>
       <li><a href="index.html">🏠 Home</a></li>
       <li><a href="servizi_claude.html">💅 Servizi</a></li>
       <li><a href="prenota.html">📅 Prenota</a></li>
       <li><a href="visualizza.html">📝 Appuntamenti</a></li>
- <!-- <li><a href="login.html">🔐 Login</a></li> -->
     </ul>
   </nav>
 </header>
@@ -50,19 +391,50 @@
   </div>
 </section>
 
-  <section class="funziona">
-    <h2>Come funziona</h2>
-    <ol>
-      <li>Consulta i servizi</li>
-      <li>Scegli il trattamento</li>
-      <li>Prenota e rilassati</li>
-    </ol>
-  </section>
+<section class="funziona">
+  <h2>Come funziona</h2>
+  <ol>
+    <li>Consulta i servizi</li>
+    <li>Scegli il trattamento</li>
+    <li>Prenota e rilassati</li>
+  </ol>
+</section>
 
-  <footer>
-    <p>Contattaci: info@estetistaludica.com | +39 000 1234567</p>
-    <p>&copy; 2025 Estetista Ludica</p>
-  </footer>
+<footer>
+  <p>Contattaci: info@estetistaludica.com | +39 000 1234567</p>
+  <p>&copy; 2025 Estetista Ludica</p>
+</footer>
+
+<script>
+function toggleMenu() {
+  const nav = document.getElementById('nav');
+  const hamburger = document.querySelector('.hamburger');
+  
+  nav.classList.toggle('open');
+  hamburger.classList.toggle('active');
+}
+
+// Chiudi il menu quando si clicca su un link
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    const nav = document.getElementById('nav');
+    const hamburger = document.querySelector('.hamburger');
+    nav.classList.remove('open');
+    hamburger.classList.remove('active');
+  });
+});
+
+// Chiudi il menu quando si clicca fuori
+document.addEventListener('click', (e) => {
+  const nav = document.getElementById('nav');
+  const hamburger = document.querySelector('.hamburger');
+  
+  if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+    nav.classList.remove('open');
+    hamburger.classList.remove('active');
+  }
+});
+</script>
 
 </body>
 </html>

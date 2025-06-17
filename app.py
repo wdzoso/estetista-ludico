@@ -11,22 +11,32 @@ app = Flask(__name__)
 CORS(app)
 
 # --- CONFIGURAZIONE DATABASE ---
-# Usa un percorso assoluto per il database per evitare problemi
-instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
-os.makedirs(instance_path, exist_ok=True)
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'database.db')
-if os.getenv("USE_SQLITE", "true") == "true":
-    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance', 'database.db')
+# La logica ora leggerà le variabili da .env (locale) o da Render (produzione)
+if os.getenv("USE_SQLITE") == "true":
+    # Configurazione per SVILUPPO LOCALE con SQLite
+    print("--- INFO: Avvio in modalità SVILUPPO, uso database SQLite locale. ---")
+    instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+    os.makedirs(instance_path, exist_ok=True)
+    db_path = os.path.join(instance_path, 'database.db')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    # Configurazione per PRODUZIONE con database esterno (es. PostgreSQL su Render)
+    print("--- INFO: Avvio in modalità PRODUZIONE, uso database esterno. ---")
+    db_url = os.getenv('DATABASE_URL')
+    if not db_url:
+        raise ValueError("ERRORE: La variabile d'ambiente DATABASE_URL non è impostata in modalità produzione.")
+    
+    # Correzione necessaria per le nuove versioni di SQLAlchemy con Render/Heroku
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['ENV'] = os.getenv('FLASK_ENV', 'production')
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-key')
-app.config['DATABASE'] = os.getenv('DATABASE_PATH', 'instance/database.db')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'una-chiave-segreta-di-fallback')
 
+
+# Inizializza il DB DOPO che la configurazione è stata impostata
 db = SQLAlchemy(app)
 
 # --- MODELLI ---
