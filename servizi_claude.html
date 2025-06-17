@@ -272,14 +272,14 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
 
-    /* Gallery Controls - FIXED z-index and positioning */
+    /* Gallery Controls */
     .gallery-controls {
       display: flex;
       justify-content: center;
       gap: 25px;
       margin-top: 40px;
       position: relative;
-      z-index: 10; /* Increased z-index to ensure buttons are clickable */
+      z-index: 10;
     }
 
     .control-btn {
@@ -293,8 +293,8 @@
       font-weight: 600;
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      position: relative; /* Added to ensure proper stacking */
-      pointer-events: auto; /* Explicitly enable pointer events */
+      position: relative;
+      pointer-events: auto;
     }
 
     .control-btn:hover {
@@ -346,63 +346,270 @@
       font-size: 1.1em;
     }
 
-    /* Responsive Design */
+    /* ===== MOBILE OPTIMIZED RESPONSIVE DESIGN ===== */
     @media (max-width: 768px) {
-      .gallery-slide.active {
+      header {
         flex-direction: column;
-        gap: 30px;
-      }
-
-      .service-details {
-        padding-left: 0;
-      }
-
-      .thumbnails-nav {
         gap: 15px;
+        padding: 15px 20px;
+        text-align: center;
+      }
+
+      .logo {
+        height: 50px;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+      }
+
+      nav li {
+        flex: 0 0 auto;
+      }
+
+      nav a {
+        font-size: 0.9em;
+        padding: 8px 12px;
+        border-radius: 15px;
+        background: rgba(255,255,255,0.2);
+        transition: all 0.3s ease;
+      }
+      
+      /* Compact main title */
+      .main-title {
+        font-size: 1.8em;
+        margin-bottom: 25px;
+      }
+
+      .main-title::after {
+        width: 60px;
+        height: 3px;
+        margin: 15px auto;
+      }
+
+      /* Mobile-optimized container */
+      .servizi-container {
+        padding: 20px 15px;
+      }
+
+      /* Compact thumbnail navigation */
+      .thumbnails-nav {
+        gap: 8px;
+        margin-bottom: 20px;
+        justify-content: space-around;
+        padding: 0 10px;
       }
 
       .thumbnail {
-        width: 80px;
-        height: 80px;
-        font-size: 1.8rem;
+        width: 70px;
+        height: 70px;
+        font-size: 1.5rem;
+        border-width: 3px;
       }
 
-      .main-title {
-        font-size: 2em;
+      .thumbnail-label {
+        bottom: -25px;
+        font-size: 0.75rem;
+      }
+
+      /* Mobile gallery container - much more compact */
+      .gallery-container {
+        padding: 20px 15px;
+        border-radius: 20px;
+      }
+
+      /* Mobile slide layout - vertical stack */
+      .gallery-slide.active {
+        flex-direction: column;
+        gap: 20px;
+        align-items: stretch;
+      }
+
+      /* Mobile service image - smaller */
+      .service-image {
+        max-width: 100%;
+        order: 1;
+      }
+
+      .service-image img {
+        height: 250px;
+        border-radius: 15px;
+      }
+
+      /* Mobile service details - more compact */
+      .service-details {
+        padding-left: 0;
+        order: 2;
       }
 
       .service-title {
-        font-size: 1.8em;
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        text-align: center;
       }
 
-      .gallery-container {
-        padding: 25px 20px;
+      .service-description {
+        font-size: 0.95em;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        text-align: center;
       }
 
-      .servizi-container {
-        padding: 30px 15px;
+      /* Compact feature list */
+      .service-features {
+        margin-bottom: 20px;
       }
 
-      .header {
-        padding: 40px 15px;
+      .service-features li {
+        padding: 8px 0;
+        font-size: 0.9em;
+        padding-left: 25px;
       }
 
-      .header h1 {
-        font-size: 2em;
+      .service-features li::before {
+        font-size: 0.9em;
       }
 
-      .header p {
-        font-size: 1em;
+      /* Centered price tag */
+      .price-tag {
+        display: block;
+        text-align: center;
+        padding: 10px 20px;
+        font-size: 1.1em;
+        margin: 0 auto;
+        width: fit-content;
       }
 
+      /* Mobile controls - stacked and compact */
       .gallery-controls {
-        flex-wrap: wrap;
-        gap: 15px;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 25px;
+        align-items: center;
       }
 
       .control-btn {
         padding: 10px 20px;
         font-size: 0.9rem;
+        min-width: 150px;
+      }
+
+      /* Simplified auto-play indicator */
+      .auto-play-indicator {
+        margin-top: 15px;
+        font-size: 0.8rem;
+      }
+
+      .auto-play-indicator > div:first-child {
+        margin-bottom: 8px;
+      }
+    }
+
+    /* Extra small screens optimization */
+    @media (max-width: 480px) {
+      .servizi-container {
+        padding: 15px 10px;
+      }
+
+      .thumbnails-nav {
+        gap: 6px;
+        padding: 0 5px;
+      }
+
+      .thumbnail {
+        width: 60px;
+        height: 60px;
+        font-size: 1.3rem;
+        border-width: 2px;
+      }
+
+      .thumbnail-label {
+        font-size: 0.7rem;
+        bottom: -20px;
+      }
+
+      .gallery-container {
+        padding: 15px 12px;
+        border-radius: 15px;
+      }
+
+      .service-image img {
+        height: 200px;
+        border-radius: 12px;
+      }
+
+      .service-title {
+        font-size: 1.3em;
+      }
+
+      .service-description {
+        font-size: 0.9em;
+      }
+
+      .service-features li {
+        font-size: 0.85em;
+        padding: 6px 0;
+        padding-left: 22px;
+      }
+
+      .price-tag {
+        font-size: 1em;
+        padding: 8px 16px;
+      }
+
+      .control-btn {
+        min-width: 130px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+      }
+
+      .main-title {
+        font-size: 1.6em;
+      }
+
+      .header h1 {
+        font-size: 1.6em;
+      }
+    }
+
+    /* Landscape mobile optimization */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .header {
+        padding: 20px 15px;
+      }
+
+      .header h1 {
+        font-size: 1.6em;
+        margin-bottom: 5px;
+      }
+
+      .header p {
+        font-size: 0.9em;
+      }
+
+      .main-title {
+        font-size: 1.6em;
+        margin-bottom: 20px;
+      }
+
+      .thumbnails-nav {
+        margin-bottom: 15px;
+      }
+
+      .service-image img {
+        height: 200px;
+      }
+
+      .gallery-controls {
+        margin-top: 20px;
+      }
+
+      .auto-play-indicator {
+        margin-top: 10px;
       }
     }
   </style>
